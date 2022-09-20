@@ -8,12 +8,14 @@ const app = express();
 
 app.use(cors());
 
-app.use( express.json());
+app.use(express.json());
 
 dbConnection();
 
 // Rutas
 app.use("/api/usuarios", require("./routes/usuarios"));
+
+app.use("/api/login", require("./routes/auth"));
 
 app.listen(3005, () => {
   console.log("servidor corriendo" + process.env.PORT);
