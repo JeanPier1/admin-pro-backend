@@ -21,15 +21,14 @@ router.get("/", validarJWT, getMedico);
 
 router.post("/", [
   validarJWT,
-  check("nombre","El nombre del medico es necesario"),
-  check("idhospital","El id del hospital es necesario"),
+  check("nombre","El nombre del medico es necesario").not().isEmpty(),
+  check("hospital","El id del hospital es necesario").not().isEmpty(),
   validarCampos
 ], crearMedico);
 
 router.put("/:id", [
 validarJWT,
-  check("nombre","El nombre del medico es necesario"),
-  check("idhospital","El id del hospital es necesario"),
+  check("nombre","El nombre del medico es necesario").not().isEmpty(),
   validarCampos
 ], actualizarMedico);
 
