@@ -22,13 +22,14 @@ router.get("/", validarJWT, getMedico);
 router.post("/", [
   validarJWT,
   check("nombre","El nombre del medico es necesario").not().isEmpty(),
-  check("hospital","El id del hospital es necesario").not().isEmpty(),
+  check("hospital","El id del hospital debe ser valido").isMongoId(),
   validarCampos
 ], crearMedico);
 
 router.put("/:id", [
 validarJWT,
   check("nombre","El nombre del medico es necesario").not().isEmpty(),
+  check("hospital","El id del hospital debe ser valido").isMongoId(),
   validarCampos
 ], actualizarMedico);
 

@@ -1,8 +1,10 @@
 const { response } = require("express");
 const Medico = require("../models/medico");
+const Hospital = require("../models/hospital");
+
 
 const getMedico = async (req, res = response) => {
-  const medicos = await Medico.find();
+  const medicos = await Medico.find().populate('hospital','nombre img').populate('usuario','nombre img');
 
   res.json({
     ok: true,
@@ -12,9 +14,22 @@ const getMedico = async (req, res = response) => {
 
 const crearMedico = async (req, res = response) => {
   const uid = req.uid;
+
+
+  const { hospital , ...params} = req.body;
+
+  const hospitalDB = await Hospital.findById(hospital);
+  if (!hospitalDB) {
+    return res.status(404).json({
+      ok: false,
+      msg: "No existe ese hospital por id",
+    });
+  }
+
+
   const medico = new Medico({
     usuario: uid,
-    ...req.body,
+    ...params,
   });
 
   try {
@@ -42,11 +57,22 @@ const actualizarMedico = async (req, res = response) => {
         msg: "No existe ese medico por id",
       });
     }
-    const { nombre } = req.body;
+
+    const { nombre,hospital , ...params} = req.body;
+
+    const hospitalDB = await Hospital.findById(hospital);
+    if (!hospitalDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe ese hospital por id",
+      });
+    }
+
 
     const medicoactualizado = await Medico.findByIdAndUpdate(
       uid,
       { nombre: nombre },
+      { hospital: hospital },
       {
         new: true,
       }
