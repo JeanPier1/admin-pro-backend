@@ -32,9 +32,10 @@ const crearHospital = async (req, res = response) => {
 };
 
 const actualizarHospital = async (req, res = response) => {
-  const uid = req.params.id;
+  const id = req.params.id;
+  const uid = req.uid;
   try {
-    const hospitalDB = await Hospital.findById(uid);
+    const hospitalDB = await Hospital.findById(id);
     if (!hospitalDB) {
       return res.status(404).json({
         ok: false,
@@ -42,9 +43,12 @@ const actualizarHospital = async (req, res = response) => {
       });
     }
 
-    const { nombre } = req.body;
+    const cambiosHospital = {
+      ...req.body,
+      usuario:uid
+    }
 
-    const hospitalactualizado = await Hospital.findByIdAndUpdate(uid, { nombre: nombre}, {
+    const hospitalactualizado = await Hospital.findByIdAndUpdate(id, cambiosHospital, {
       new: true,
     });
 
